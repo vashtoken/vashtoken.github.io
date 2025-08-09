@@ -19,7 +19,6 @@
       word-wrap: break-word;
     }
     .hash {
-      font-family: monospace;
       font-size: 1rem;
       color: #bbb;
       word-wrap: break-word;
@@ -51,17 +50,18 @@
     }
     /* Social Links */
     .social-links {
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
     }
     .social-links a {
       display: inline-block;
-      margin: 0 8px;
+      margin: 0 12px;
       color: #70e0ff;
-      font-size: 1.5rem;
-      transition: 0.3s;
+      font-size: 2rem;
+      transition: transform 0.3s ease, color 0.3s ease;
     }
     .social-links a:hover {
       color: #ff7b7b;
+      transform: scale(1.15);
     }
     @media (max-width: 600px) {
       body {
@@ -123,11 +123,11 @@
       <li>Use the token address above</li>
     </ol>
 
-    <!-- Social Links -->
+    <!-- Social Links under How to Buy -->
     <div class="social-links">
       <a href="https://x.com/YOUR_HANDLE" target="_blank"><i class="fab fa-twitter"></i></a>
       <a href="https://t.me/YOUR_HANDLE" target="_blank"><i class="fab fa-telegram"></i></a>
-    </div>
+         </div>
 
     <div class="footer">
       <p>⚠️ This is a meme token with no financial value.<br>
@@ -138,4 +138,3 @@
   </div>
 </body>
 </html>
-
