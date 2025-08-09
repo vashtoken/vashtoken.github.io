@@ -11,19 +11,26 @@
       color: #fff;
       text-align: center;
       padding: 2rem;
+      margin: 0;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       margin-bottom: 1rem;
+      word-wrap: break-word;
     }
     .hash {
       font-family: monospace;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #bbb;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-width: 100%;
+      white-space: normal;
     }
     .container {
       max-width: 700px;
       margin: auto;
+      padding: 0 1rem;
     }
     a {
       color: #70e0ff;
@@ -34,18 +41,50 @@
       font-size: 0.8rem;
       color: #666;
     }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    ul, ol {
+      padding-left: 1.2rem;
+      text-align: left;
+    }
+    /* Social Links */
+    .social-links {
+      margin-top: 1.5rem;
+    }
+    .social-links a {
+      display: inline-block;
+      margin: 0 8px;
+      color: #70e0ff;
+      font-size: 1.5rem;
+      transition: 0.3s;
+    }
+    .social-links a:hover {
+      color: #ff7b7b;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
   </style>
+  <!-- Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="container">
     <h1>💥 Vitalik Was Here $VASH </h1>
     <p>A tribute to the Ethereum Genesis Block.<br>
        A meme token on Base. Nothing more. Nothing less.</p>
-<!-- Centered Image -->
-<div style="margin: 20px 0;">
-  <img src="assets/vitalikwasherenew.png" alt="Vitalik Was Here" 
-       style="max-width: 300px; width: 100%; height: auto;">
-</div>
+
+    <!-- Centered Image -->
+    <div style="margin: 20px 0;">
+      <img src="assets/vitalikwasherenew.png" alt="Vitalik Was Here">
+    </div>
 
     <p class="hash">Hash: 0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3</p>
 
@@ -77,12 +116,18 @@
     </ul>
 
     <h2>How to Buy</h2>
-    <ol style="text-align:left; max-width:400px; margin: auto;">
+    <ol style="max-width:400px; margin: auto;">
       <li>Install <a href="https://metamask.io" target="_blank">MetaMask</a></li>
       <li>Bridge ETH to Base using <a href="https://bridge.base.org" target="_blank">bridge.base.org</a></li>
       <li>Buy on a Base DEX like <a href="https://uniswap.org" target="_blank">Uniswap</a></li>
       <li>Use the token address above</li>
     </ol>
+
+    <!-- Social Links -->
+    <div class="social-links">
+      <a href="https://x.com/YOUR_HANDLE" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://t.me/YOUR_HANDLE" target="_blank"><i class="fab fa-telegram"></i></a>
+    </div>
 
     <div class="footer">
       <p>⚠️ This is a meme token with no financial value.<br>
@@ -93,3 +138,4 @@
   </div>
 </body>
 </html>
+
