@@ -14,7 +14,7 @@ Just memes, nostalgia, and decentralized vibes.
 
 
 
-## 🧬 Why We Embedded Ethereum’s Genesis Block Hash in the Contract
+## 🧬 Embedded Ethereum’s Genesis Block Hash in the Contract
 
 **$VASH (Vitalik Was Here)** is deployed on the **Base** network — a fast and secure Ethereum Layer 2.  
 Yet, we chose to embed the **Ethereum Genesis Block hash** as a tribute. 
