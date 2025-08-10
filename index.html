@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Wallet</title>
+    <title>Donation Wallet (Base)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,13 +64,15 @@
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
     const donationWallet = "0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85";
+    const baseBlockscoutAPI = "https://base.blockscout.com/api";
+
     document.getElementById("wallet-address").innerText = donationWallet;
     document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${donationWallet}`;
 
-    // Fetch balance from Blockscout
+    // Fetch balance from Base Blockscout
     async function fetchBalance() {
         try {
-            const res = await fetch(`https://eth.blockscout.com/api?module=account&action=balance&address=${donationWallet}`);
+            const res = await fetch(`${baseBlockscoutAPI}?module=account&action=balance&address=${donationWallet}`);
             const data = await res.json();
             if (data.status === "1") {
                 document.getElementById("wallet-balance").innerText = parseFloat(ethers.utils.formatEther(data.result)).toFixed(4);
@@ -82,10 +84,10 @@
         }
     }
 
-    // Fetch recent contributors from Blockscout
+    // Fetch recent contributors from Base Blockscout
     async function fetchRecentTxs() {
         try {
-            const res = await fetch(`https://eth.blockscout.com/api?module=account&action=txlist&address=${donationWallet}&sort=desc`);
+            const res = await fetch(`${baseBlockscoutAPI}?module=account&action=txlist&address=${donationWallet}&sort=desc`);
             const data = await res.json();
             if (data.status === "1") {
                 let txHtml = "";
@@ -107,9 +109,17 @@
         }
     }
 
+    // Initial load
     fetchBalance();
     fetchRecentTxs();
+
+    // Auto refresh every 30 seconds
+    setInterval(() => {
+        fetchBalance();
+        fetchRecentTxs();
+    }, 30000);
 </script>
 
 </body>
 </html>
+
