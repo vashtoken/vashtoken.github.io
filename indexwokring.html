@@ -1,125 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Wallet (Base)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        .wallet-box {
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        .wallet-address {
-            font-size: 14px;
-            word-break: break-all;
-        }
-        .balance {
-            font-size: 18px;
-            margin: 10px 0;
-            color: #0f0;
-        }
-        .contributors {
-            margin-top: 20px;
-            text-align: left;
-            display: inline-block;
-        }
-        .contributors h3 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .tx {
-            font-size: 14px;
-            margin: 4px 0;
-        }
-        img {
-            margin: 10px 0;
-            border: 3px solid white;
-            border-radius: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Liquidity Fund — $VASH</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 700px;
+        margin: auto;
+        padding: 20px;
+        background: #f9f9f9;
+        color: #333;
+    }
+    h1 {
+        text-align: center;
+        color: #222;
+    }
+    .wallet-box {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        text-align: center;
+        word-break: break-word;
+    }
+    button {
+        padding: 8px 12px;
+        margin-top: 8px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .balance {
+        font-size: 1.2em;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .qr-code {
+        margin-top: 15px;
+    }
+    .home-btn {
+        display: block;
+        text-align: center;
+        background: #28a745;
+        margin: 20px 0;
+    }
+    .home-btn:hover {
+        background: #1e7e34;
+    }
+    .transactions {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .transactions h2 {
+        margin-top: 0;
+    }
+    .tx-item {
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 0.95em;
+    }
+    .tx-item:last-child {
+        border-bottom: none;
+    }
+    .tx-link {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .tx-link:hover {
+        text-decoration: underline;
+    }
+    .disclaimer {
+        font-size: 0.85em;
+        color: #555;
+        margin-top: 20px;
+        background: #fff3cd;
+        padding: 10px;
+        border-radius: 8px;
+    }
+</style>
 </head>
 <body>
 
-    <h1>Support the Project</h1>
-    <div class="wallet-box">
-        <p><strong>Donation Wallet:</strong></p>
-        <p class="wallet-address" id="wallet-address"></p>
-        <p class="balance">Balance: <span id="wallet-balance">Loading...</span> ETH</p>
-        <img id="qr-code" src="" width="180" height="180" alt="QR Code">
-        <div class="contributors">
-            <h3>Recent Contributors</h3>
-            <div id="tx-list">Loading...</div>
-        </div>
+<h1>Community Liquidity Fund — $VITALIK WAS HERE (VASH)</h1>
+<p>Voluntary donations will be used to seed and lock the initial liquidity pool on <strong>Base</strong>. Donations are transparent and will be published before the launch. This is not an investment — see disclaimer below.</p>
+
+<div class="wallet-box">
+    <strong>Donation Wallet:</strong>
+    <div id="wallet-address">0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85</div>
+    <button onclick="copyWallet()">Copy Wallet Address</button>
+    <div class="balance" id="wallet-balance">Balance: Loading...</div>
+    <div class="qr-code">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85&size=150x150" alt="QR Code">
     </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<a href="about.html" class="home-btn">🏠 Home / Learn More</a>
+
+<div class="transactions">
+    <h2>Recent Contributors</h2>
+    <div id="tx-list">Loading...</div>
+</div>
+
+<div class="disclaimer">
+    <strong>Disclaimer:</strong> Donations are fully voluntary and non-refundable. Contributions will be used to seed the $VASH liquidity pool and lock LP tokens. Contributions do not represent an investment, ownership, or guarantee of profit. Check the donation wallet and transactions on the public explorer. Your contribution is at your own risk. If you live in a jurisdiction where crypto fund contributions are restricted, do not contribute.
+</div>
+
 <script>
-    const donationWallet = "0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85";
-    const baseBlockscoutAPI = "https://base.blockscout.com/api";
+const walletAddress = "0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85";
+const baseApi = "https://api.basescan.org/api";
+const apiKey = "Your_Basescan_API_Key"; // Get from basescan.org
 
-    document.getElementById("wallet-address").innerText = donationWallet;
-    document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${donationWallet}`;
-
-    // Fetch balance from Base Blockscout
-    async function fetchBalance() {
-        try {
-            const res = await fetch(`${baseBlockscoutAPI}?module=account&action=balance&address=${donationWallet}`);
-            const data = await res.json();
-            if (data.status === "1") {
-                document.getElementById("wallet-balance").innerText = parseFloat(ethers.utils.formatEther(data.result)).toFixed(4);
-            } else {
-                document.getElementById("wallet-balance").innerText = "0.0000";
-            }
-        } catch (err) {
-            document.getElementById("wallet-balance").innerText = "Error";
+async function fetchBalance() {
+    try {
+        const res = await fetch(`${baseApi}?module=account&action=balance&address=${walletAddress}&tag=latest&apikey=${apiKey}`);
+        const data = await res.json();
+        if (data.status === "1") {
+            const ethBalance = (parseFloat(data.result) / 1e18).toFixed(4);
+            document.getElementById("wallet-balance").innerText = `Balance: ${ethBalance} ETH`;
+        } else {
+            document.getElementById("wallet-balance").innerText = "Balance: Error";
         }
+    } catch (err) {
+        document.getElementById("wallet-balance").innerText = "Balance: Error";
     }
+}
 
-    // Fetch recent contributors from Base Blockscout
-    async function fetchRecentTxs() {
-        try {
-            const res = await fetch(`${baseBlockscoutAPI}?module=account&action=txlist&address=${donationWallet}&sort=desc`);
-            const data = await res.json();
-            if (data.status === "1") {
-                let txHtml = "";
-                const seen = new Set();
-                data.result.forEach(tx => {
-                    if (tx.to && tx.to.toLowerCase() === donationWallet.toLowerCase() && !seen.has(tx.hash)) {
-                        seen.add(tx.hash);
-                        const shortFrom = tx.from.slice(0, 6) + "..." + tx.from.slice(-4);
-                        const amountEth = parseFloat(ethers.utils.formatEther(tx.value)).toFixed(4);
-                        txHtml += `<div class="tx">${amountEth} ETH from ${shortFrom}</div>`;
-                    }
-                });
-                document.getElementById("tx-list").innerHTML = txHtml || "No recent contributions";
-            } else {
-                document.getElementById("tx-list").innerText = "No data";
-            }
-        } catch (err) {
-            document.getElementById("tx-list").innerText = "Error fetching transactions";
+async function fetchTransactions() {
+    try {
+        const res = await fetch(`${baseApi}?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=${apiKey}`);
+        const data = await res.json();
+        const txList = document.getElementById("tx-list");
+        txList.innerHTML = "";
+        if (data.status === "1") {
+            data.result.forEach(tx => {
+                const valueEth = (parseFloat(tx.value) / 1e18).toFixed(4);
+                const fromAddr = `${tx.from.substring(0,6)}...${tx.from.slice(-4)}`;
+                const txLink = `https://basescan.org/tx/${tx.hash}`;
+                const div = document.createElement("div");
+                div.classList.add("tx-item");
+                div.innerHTML = `${valueEth} ETH from ${fromAddr} — <a class="tx-link" href="${txLink}" target="_blank">View</a>`;
+                txList.appendChild(div);
+            });
+        } else {
+            txList.innerHTML = "No recent transactions.";
         }
+    } catch (err) {
+        document.getElementById("tx-list").innerText = "Error loading transactions.";
     }
+}
 
-    // Initial load
+function copyWallet() {
+    navigator.clipboard.writeText(walletAddress).then(() => {
+        alert("Wallet address copied!");
+    });
+}
+
+// Auto-refresh every 30s
+setInterval(() => {
     fetchBalance();
-    fetchRecentTxs();
+    fetchTransactions();
+}, 30000);
 
-    // Auto refresh every 30 seconds
-    setInterval(() => {
-        fetchBalance();
-        fetchRecentTxs();
-    }, 30000);
+fetchBalance();
+fetchTransactions();
 </script>
 
 </body>
 </html>
-
