@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Wallet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #111; color: white; }
+        .section { padding: 20px; margin: 20px auto; max-width: 500px; background: #1e1e1e; border-radius: 8px; }
+        .balance { font-size: 1.5em; margin-bottom: 10px; }
+        a { color: #0ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="section">
+        <h2>Support Our Project ❤️</h2>
+        <div class="balance">Balance: <span id="wallet-balance">Loading...</span> ETH</div>
+        <div id="qrcode"></div>
+        <p>Donation Wallet:<br><strong id="wallet-address">0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85</strong></p>
+        <h3>Recent Contributors</h3>
+        <ul id="recent-txs">Loading...</ul>
+    </div>
+
+    <script>
+        const donationWallet = "0xeb187d9Ba73249e1C1D31bf30c85Ebe47fD85e85";
+        const blockscoutApi = `https://eth.blockscout.com/api?module=account&action=txlist&address=${donationWallet}&sort=desc`;
+
+        // Generate QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: donationWallet,
+            width: 180,
+            height: 180,
+            colorDark: "#ffffff",
+            colorLight: "#111111"
+        });
+
+        // Fetch ETH Balance (Public RPC)
+        async function fetchBalance() {
+            try {
+                const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
+                const balance = await provider.getBalance(donationWallet);
+                document.getElementById("wallet-balance").innerText = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
+            } catch (err) {
+                document.getElementById("wallet-balance").innerText = "Error";
+            }
+        }
+
+        // Fetch Recent Transactions from Blockscout (No API key)
+        async function fetchRecentTxs() {
+            try {
+                const res = await fetch(blockscoutApi);
+                const data = await res.json();
+                const txList = document.getElementById("recent-txs");
+                txList.innerHTML = "";
+                if (data.result && data.result.length > 0) {
+                    const incomingTxs = data.result.filter(tx => tx.to && tx.to.toLowerCase() === donationWallet.toLowerCase());
+                    incomingTxs.slice(0, 5).forEach(tx => {
+                        const li = document.createElement("li");
+                        li.innerHTML = `<a href="https://eth.blockscout.com/tx/${tx.hash}" target="_blank">${parseFloat(ethers.utils.formatEther(tx.value)).toFixed(4)} ETH</a> from ${tx.from.slice(0,6)}...${tx.from.slice(-4)}`;
+                        txList.appendChild(li);
+                    });
+                } else {
+                    txList.innerHTML = "<li>No recent donations</li>";
+                }
+            } catch (err) {
+                document.getElementById("recent-txs").innerHTML = "<li>Error fetching transactions</li>";
+            }
+        }
+
+        fetchBalance();
+        fetchRecentTxs();
+    </script>
+</body>
+</html>
